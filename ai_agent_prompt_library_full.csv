@@ -1,0 +1,41 @@
+question,method,explanation,code
+How to test the relationship between two continuous variables?,Pearson Correlation,Use Pearson correlation when testing the linear relationship between two continuous variables.,"from scipy.stats import pearsonr
+r, p = pearsonr(df['x'], df['y'])"
+Which regression method should I use to predict sales based on advertising budget?,Simple Linear Regression,Use linear regression when predicting a continuous outcome based on one predictor.,"import statsmodels.api as sm
+X = df[['budget']]
+X = sm.add_constant(X)
+y = df['sales']
+model = sm.OLS(y, X).fit()
+print(model.summary())"
+How can I compare average test scores across multiple classes?,One-way ANOVA,One-way ANOVA is used to compare the means of more than two groups.,"from scipy.stats import f_oneway
+f, p = f_oneway(df[df['class']=='A']['score'], df[df['class']=='B']['score'], df[df['class']=='C']['score'])"
+What test do I use to check if gender affects opinion?,Chi-square Test of Independence,Use Chi-square to test independence between two categorical variables.,"from scipy.stats import chi2_contingency
+table = pd.crosstab(df['gender'], df['opinion'])
+stat, p, dof, expected = chi2_contingency(table)"
+How to check if the average weight is significantly different from 60kg?,One-sample t-test,Use one-sample t-test to compare sample mean against a known value.,"from scipy.stats import ttest_1samp
+t_stat, p_val = ttest_1samp(df['weight'], 60)"
+How to compare the average scores between male and female students?,Independent two-sample t-test,Use independent t-test when comparing means of two independent groups.,"from scipy.stats import ttest_ind
+t, p = ttest_ind(df[df['gender']=='Male']['score'], df[df['gender']=='Female']['score'])"
+How to model a binary outcome using statistical methods?,Logistic Regression,"Logistic regression is used when the response variable is binary (e.g., yes/no).","import statsmodels.api as sm
+X = df[['age', 'income']]
+X = sm.add_constant(X)
+y = df['purchased']
+model = sm.Logit(y, X).fit()
+print(model.summary())"
+Which method can predict if a customer will buy a product or not?,Logistic Regression,Use logistic regression to model binary classification problems like purchase decision.,"from sklearn.linear_model import LogisticRegression
+model = LogisticRegression()
+model.fit(X, y)"
+How to reduce the number of variables in a dataset with minimal information loss?,Principal Component Analysis (PCA),PCA reduces dimensionality by transforming variables into a smaller set of components.,"from sklearn.decomposition import PCA
+pca = PCA(n_components=2)
+X_pca = pca.fit_transform(df.drop(columns='target'))"
+Which technique is used for dimensionality reduction in datasets with many variables?,Principal Component Analysis (PCA),PCA helps reduce noise and redundancy in high-dimensional datasets.,"import matplotlib.pyplot as plt
+plt.plot(range(1, len(pca.explained_variance_ratio_)+1), pca.explained_variance_ratio_)"
+How can I estimate the sampling distribution of a statistic?,Bootstrap Resampling,Bootstrapping involves repeatedly resampling from the data and computing statistics.,"import numpy as np
+means = [df['value'].sample(frac=1, replace=True).mean() for _ in range(1000)]"
+Which technique can I use to build confidence intervals without relying on normality?,Bootstrap,Bootstrap methods can generate confidence intervals by empirical percentiles.,"lower, upper = np.percentile(means, [2.5, 97.5])"
+How to group customers into segments based on their purchasing behavior?,K-means Clustering,K-means groups similar observations into clusters based on feature similarity.,"from sklearn.cluster import KMeans
+model = KMeans(n_clusters=3)
+model.fit(df[['income', 'spending']])"
+Which method helps uncover natural groupings in data without labels?,Unsupervised Clustering,Unsupervised clustering methods like K-means or hierarchical clustering detect hidden patterns.,"from scipy.cluster.hierarchy import dendrogram, linkage
+linked = linkage(df, 'ward')
+dendrogram(linked)"
